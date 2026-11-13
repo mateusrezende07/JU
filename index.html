@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffe8f0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Júlia & Mateus — Nossa história</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="ambient-hearts" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="name"><span>♥</span> JÚLIA</div>
+  <div class="counter-wrap">
+    <p>juntos, construindo nossa história há</p>
+    <div class="counter">
+      <div><strong id="days">0</strong><small>dias</small></div>
+      <i>:</i>
+      <div><strong id="hours">00</strong><small>horas</small></div>
+      <i>:</i>
+      <div><strong id="minutes">00</strong><small>min</small></div>
+      <i>:</i>
+      <div><strong id="seconds">00</strong><small>seg</small></div>
+    </div>
+    <p class="since">desde 13 de março de 2024</p>
+  </div>
+  <div class="name name-right">MATEUS <span>♥</span></div>
+</header>
+
+<main>
+  <section class="hero">
+    <span class="eyebrow">UM PEDACINHO DA NOSSA HISTÓRIA</span>
+    <h1>Meu lugar favorito<br><em>é ao seu lado.</em></h1>
+    <p>Um cantinho para guardar os momentos, as músicas e tudo aquilo que faz a nossa história ser só nossa.</p>
+    <a href="#memorias" class="hero-link">ver nossas memórias <b>↓</b></a>
+    <span class="flower flower-one">✿</span>
+    <span class="flower flower-two">✿</span>
+  </section>
+
+  <section class="memories-section" id="memorias">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">NOSSO ÁLBUM</span>
+        <h2>Pequenos momentos,<br><em>grandes lembranças.</em></h2>
+      </div>
+      <button class="add-button" id="openAdd" type="button">＋ adicionar memória</button>
+    </div>
+
+    <div class="memory-grid" id="memoryGrid">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">♡</div>
+        <h3>Nosso álbum começa aqui</h3>
+        <p>Adicione uma foto especial, dê um nome para essa lembrança e escolha a música que combina com ela.</p>
+        <button class="text-button" id="emptyAdd" type="button">Adicionar a primeira memória →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote-section">
+    <span class="quote-mark">“</span>
+    <p>Não são só os grandes momentos.<br>São todos os pequenos instantes com você.</p>
+    <small>com amor, Mateus ♥</small>
+  </section>
+</main>
+
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+
+<dialog class="dialog" id="addDialog">
+  <form id="memoryForm" class="dialog-card">
+    <button type="button" class="close-button" data-close="addDialog" aria-label="Fechar">×</button>
+    <span class="eyebrow">GUARDAR UMA LEMBRANÇA</span>
+    <h2>Mais um capítulo <em>nosso.</em></h2>
+
+    <label>Nome da memória
+      <input id="memoryTitle" maxlength="55" placeholder="Ex.: Nosso primeiro passeio" required>
+    </label>
+
+    <label>Uma pequena descrição <small>(opcional)</small>
+      <textarea id="memoryNote" rows="2" maxlength="180" placeholder="Por que esse momento é especial?"></textarea>
+    </label>
+
+    <label>Data do momento
+      <input id="memoryDate" type="date" required>
+    </label>
+
+    <label>Foto da lembrança
+      <input id="memoryPhoto" type="file" accept="image/*" required>
+      <small>Escolha uma foto do seu dispositivo.</small>
+    </label>
+
+    <label>Música dessa memória — link do YouTube
+      <input id="youtubeLink" type="url" placeholder="https://www.youtube.com/watch?v=..." required>
+      <small>Cole o link de um vídeo que permita reprodução incorporada.</small>
+    </label>
+
+    <div class="song-range">
+      <label>Começar em (segundos)
+        <input id="musicStart" type="number" min="0" step="1" value="0">
+      </label>
+      <label>Parar em (segundos)
+        <input id="musicEnd" type="number" min="0" step="1" placeholder="Até o fim">
+      </label>
+    </div>
+
+    <p class="form-hint">Você pode escolher um trecho da música. Deixe “Parar em” vazio para tocar até o final.</p>
+    <button class="submit-button" id="saveMemoryButton" type="submit">Salvar essa memória ♥</button>
+    <p class="form-error" id="formError" role="alert"></p>
+  </form>
+</dialog>
+
+<dialog class="dialog view-dialog" id="viewDialog">
+  <div class="view-card">
+    <button type="button" class="close-button" data-close="viewDialog" aria-label="Fechar">×</button>
+    <div class="view-photo-wrap">
+      <img id="viewPhoto" alt="">
+    </div>
+    <div class="view-content">
+      <span class="eyebrow" id="viewDate"></span>
+      <h2 id="viewTitle"></h2>
+      <p id="viewNote"></p>
+
+      <div class="audio-area" id="audioArea" hidden>
+        <div class="audio-label">♫ <span id="audioName">A música dessa lembrança</span></div>
+        <div class="youtube-frame-wrap">
+          <iframe
+            id="youtubePlayer"
+            title="Música da lembrança no YouTube"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <p class="audio-tip" id="audioTip"></p>
+      </div>
+
+      <button class="delete-button" id="deleteMemory" type="button">Excluir esta memória</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="./script.js"></script>
+</body>
+</html>
