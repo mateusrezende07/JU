@@ -1,0 +1,42 @@
+# Júlia & Mateus — álbum compartilhado
+
+## O que este pacote faz
+- As lembranças ficam no Supabase, não apenas no navegador.
+- Júlia consegue abrir o site e visualizar as memórias sem fazer login.
+- Mateus entra com e-mail e senha para adicionar ou excluir lembranças.
+- Fotos e arquivos de música são enviados para o armazenamento online.
+- O botão **importar memórias antigas** copia as memórias do IndexedDB deste navegador para a nuvem. A cópia local não é apagada.
+
+## 1. Criar o projeto Supabase
+1. Crie um projeto em https://supabase.com/.
+2. Abra **SQL Editor**, crie uma consulta e execute todo o conteúdo de `supabase.sql`.
+3. Em **Project Settings → API**, copie a **Project URL** e a chave **anon/public**.
+4. No arquivo `script.js`, substitua:
+   - `COLE_A_URL_DO_PROJETO`
+   - `COLE_A_CHAVE_ANON_PUBLICA`
+   pela URL e chave pública do seu projeto.
+
+**Nunca coloque a chave `service_role` no site.** A chave anon/public é a que deve ficar no JavaScript do navegador.
+
+## 2. Criar o login do Mateus
+1. No Supabase, abra **Authentication → Users → Add user**.
+2. Crie o usuário com seu e-mail e uma senha forte.
+3. Depois de criar esse usuário, vá a **Authentication → Settings / Sign In** e desative novos cadastros públicos (Allow new users to sign up), se essa opção estiver habilitada.
+4. Assim, somente a conta que você criou poderá autenticar e usar os botões de edição.
+
+As políticas SQL liberam leitura pública e escrita para usuários autenticados. Por isso, desative novos cadastros após criar a sua conta e não compartilhe suas credenciais.
+
+## 3. Publicar o site
+Hospede os três arquivos `index.html`, `style.css` e `script.js` em um serviço de hospedagem estática, como Netlify, Vercel ou Cloudflare Pages. Envie a pasta inteira mantendo os três arquivos juntos. O link gerado será o que você manda para Júlia.
+
+## 4. Migrar as lembranças que já estão no seu navegador
+1. Abra o site publicado no mesmo navegador e computador onde você cadastrou as lembranças antigas.
+2. Clique em **entrar como Mateus** e faça login.
+3. Clique em **importar memórias antigas** e confirme.
+4. Aguarde a mensagem de conclusão. Depois abra o link em uma janela anônima ou no celular para conferir se as lembranças aparecem.
+5. Não limpe os dados do navegador antigo até confirmar que tudo foi copiado.
+
+## Observações
+- O armazenamento do Supabase tem limites gratuitos e pagos; vídeos/arquivos muito grandes podem exceder limites.
+- O bucket de mídia é público para que as fotos apareçam para quem tiver o link. Não use fotos que você não queira que possam ser acessadas por alguém que receba o endereço.
+- A reprodução de áudio depende do navegador; normalmente a pessoa precisa apertar play.
