@@ -767,3 +767,20 @@ footer span {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* Player incorporado do YouTube nas lembranças */
+#audioArea iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 14px;
+  background: #f4e9ed;
+  margin-top: 10px;
+}
+
+#audioArea iframe[hidden],
+#audioArea audio[hidden] {
+  display: none;
+}
