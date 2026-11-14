@@ -379,7 +379,7 @@ async function openMemory(memory) {
 
       if (end > start) params.set("end", String(Math.floor(end)));
 
-      youtubeFrame.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toString()}`;
+      youtubeFrame.src = `https://www.youtube.com/embed/${youtubeId}?${params.toString()}`;
       youtubeFrame.hidden = false;
       audio.hidden = true;
       audioTip.textContent = "Dê play no vídeo para ouvir a música. O YouTube pode exibir anúncios.";
