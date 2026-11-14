@@ -678,10 +678,10 @@ async function loadGifts(){
  });
 }
 document.getElementById("saveGift").addEventListener("click",async()=>{
- const type=document.getElementById("giftType").value.trim(),name=document.getElementById("giftName").value.trim(),creator=document.getElementById("giftCreator").value;
+ const type=document.getElementById("giftType").value.trim(),name=document.getElementById("giftName").value.trim(),creator=document.getElementById("giftCreator").value,recipient=document.getElementById("giftRecipient").value;
  if(!type||!name){msg("giftStatus","Preencha o tipo e o nome do presente.");return}
  const b=document.getElementById("saveGift");b.disabled=true;
- const {error}=await db.from("presentes").insert({tipo:type,nome:name,destinatario:creator==="Mateus"?"Júlia":"Mateus",cadastrado_por:creator});
+ const {error}=await db.from("presentes").insert({tipo:type,nome:name,destinatario:recipient,cadastrado_por:creator});
  b.disabled=false;
  if(error){msg("giftStatus","Erro ao salvar. Confira se executou o SQL de atualização dos presentes.");console.error(error);return}
  document.getElementById("giftType").value="";document.getElementById("giftName").value="";msg("giftStatus","Presente adicionado ♥");await loadGifts();
