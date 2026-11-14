@@ -1,37 +1,594 @@
-// Configure com a URL e a chave anon/public do Supabase.
-const SUPABASE_URL = "COLE_A_URL_DO_PROJETO";
-const SUPABASE_ANON_KEY = "COLE_A_CHAVE_ANON_PUBLICA";
-const BUCKET = "memory-photos";
-const DATA_INICIO = new Date(2024, 2, 13, 0, 0, 0);
-const $ = s => document.querySelector(s);
-const pronto = SUPABASE_URL.startsWith("https://") && !SUPABASE_ANON_KEY.startsWith("COLE_");
-const sb = pronto ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-let memoriaAberta=null;
-function status(t,err=false){$("#statusMessage").textContent=t;$("#statusMessage").classList.toggle("error",err);}
-function contador(){let n=Math.max(0,Math.floor((Date.now()-DATA_INICIO)/1000)),d=Math.floor(n/86400);n%=86400;let h=Math.floor(n/3600);n%=3600;let m=Math.floor(n/60),s=n%60;$("#days").textContent=d.toLocaleString("pt-BR");$("#hours").textContent=String(h).padStart(2,"0");$("#minutes").textContent=String(m).padStart(2,"0");$("#seconds").textContent=String(s).padStart(2,"0");}
-function safe(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-function dateText(v){return v?new Date(v+"T12:00:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"}):"UMA DATA ESPECIAL";}
-function pathFor(id,kind,file){let ext=(file.name.split(".").pop()||"bin").replace(/[^a-z0-9]/gi,"");return `${id}/${kind}.${ext}`;}
-async function upload(file,path){let {error}=await sb.storage.from(BUCKET).upload(path,file,{upsert:true});if(error)throw error;return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;}
-async function load(){
- const grid=$("#memoryGrid");grid.querySelectorAll(".memory-card").forEach(e=>e.remove());
- const {data,error}=await sb.from("memories").select("*").order("memory_date",{ascending:false}).order("created_at",{ascending:false});if(error)throw error;
- $("#emptyState").hidden=!!data.length;
- data.forEach(m=>{let card=document.createElement("article");card.className="memory-card";card.tabIndex=0;card.innerHTML=`<div class="memory-thumb"><img loading="lazy" src="${safe(m.photo_url)}" alt="${safe(m.title)}"></div><div class="memory-info"><span class="memory-date">${safe(dateText(m.memory_date))}</span><h3>${safe(m.title)}</h3><p>${safe(m.description||"Uma lembrança para guardar com carinho.")}</p><div class="memory-meta">${m.music_url?"♫ tem uma música especial":"♡ guardado no nosso álbum"}</div></div>`;card.onclick=()=>openMemory(m);card.onkeydown=e=>{if(e.key==="Enter")openMemory(m)};grid.append(card);});
+
+// ==========================================
+// CONFIGURAÇÃO DO SUPABASE
+// ==========================================
+
+const SUPABASE_URL = "https://mcobunhsaqdjsslftmpj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ed_ozJN13sNo_8PLAktKUg_Xph4bq17";
+
+const BUCKET = "memorias";
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+// ==========================================
+// ELEMENTOS DO SITE
+// ==========================================
+
+const authPanel = document.getElementById("authPanel");
+const loginForm = document.getElementById("loginForm");
+const loginError = document.getElementById("loginError");
+const loginButton = document.getElementById("loginButton");
+
+const memoriesSection = document.getElementById("memorias");
+const memoryGrid = document.getElementById("memoryGrid");
+const statusMessage = document.getElementById("statusMessage");
+
+const addDialog = document.getElementById("addDialog");
+const viewDialog = document.getElementById("viewDialog");
+
+const memoryForm = document.getElementById("memoryForm");
+const formError = document.getElementById("formError");
+
+const openAddButton = document.getElementById("openAdd");
+const logoutButton = document.getElementById("logoutButton");
+
+let currentUser = null;
+let selectedMemory = null;
+let memoriesCache = [];
+
+// ==========================================
+// CONTADOR DO RELACIONAMENTO
+// ==========================================
+
+function updateCounter() {
+  const startDate = new Date(2024, 2, 13);
+  const now = new Date();
+
+  let difference = Math.max(0, now - startDate);
+
+  const totalSeconds = Math.floor(difference / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  document.getElementById("days").textContent = days;
+  document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+  document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+  document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
 }
-function openMemory(m){memoriaAberta=m;$("#viewPhoto").src=m.photo_url;$("#viewTitle").textContent=m.title;$("#viewDate").textContent=dateText(m.memory_date);$("#viewNote").textContent=m.description||"";let a=$("#memoryAudio");a.pause();a.removeAttribute("src");a.load();a.ontimeupdate=null;
- if(m.music_url){a.src=m.music_url;$("#audioArea").hidden=false;$("#audioName").textContent=m.music_name||"Música dessa lembrança";let start=Number(m.music_start)||0,end=m.music_end==null?null:Number(m.music_end);$("#audioTip").textContent=`Trecho: ${start}s${end!==null?` até ${end}s`:" até o final"}. Aperte play para ouvir.`;a.onloadedmetadata=()=>{if(start>0&&start<a.duration)a.currentTime=start;};a.ontimeupdate=()=>{if(end!==null&&end>start&&a.currentTime>=end){a.pause();a.currentTime=start;}};}else $("#audioArea").hidden=true;
- $("#viewDialog").showModal();}
-function close(id){let d=document.getElementById(id);if(d.open)d.close();}
-$("#openAdd").onclick=()=>{$("#memoryForm").reset();let n=new Date();$("#memoryDate").value=n.toISOString().slice(0,10);$("#formError").textContent="";$("#addDialog").showModal();};
-document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>close(b.dataset.close));
-[$("#addDialog"),$("#viewDialog")].forEach(d=>d.addEventListener("click",e=>{if(e.target===d)d.close();}));
-$("#memoryForm").onsubmit=async e=>{e.preventDefault();let err=$("#formError"),photo=$("#memoryPhoto").files[0],music=$("#memoryMusic").files[0],start=Math.max(0,Number($("#musicStart").value)||0),endTxt=$("#musicEnd").value.trim(),end=endTxt===""?null:Number(endTxt);err.textContent="";
- if(!photo){err.textContent="Escolha uma foto.";return;}if(end!==null&&end<=start){err.textContent="O tempo final precisa ser maior que o inicial.";return;}
- let id=crypto.randomUUID();try{status("Salvando a lembrança na nuvem…");let photoPath=pathFor(id,"foto",photo),photoUrl=await upload(photo,photoPath),musicPath=null,musicUrl=null;if(music){musicPath=pathFor(id,"musica",music);musicUrl=await upload(music,musicPath);}
- let {error}=await sb.from("memories").insert({id,title:$("#memoryTitle").value.trim(),description:$("#memoryNote").value.trim(),memory_date:$("#memoryDate").value||null,photo_path:photoPath,photo_url:photoUrl,music_path:musicPath,music_url:musicUrl,music_name:music?.name||null,music_start:start,music_end:end});if(error)throw error;
- close("addDialog");await load();status("Memória salva! Ela já aparece para quem abrir o link. ♥");}catch(ex){console.error(ex);err.textContent="Não consegui salvar. Confira as configurações e a conexão.";status("Erro ao salvar a lembrança.",true);}};
-$("#deleteMemory").onclick=async()=>{if(!memoriaAberta||!confirm("Excluir esta lembrança para todos que acessam o site?"))return;try{let paths=[memoriaAberta.photo_path,memoriaAberta.music_path].filter(Boolean);let {error}=await sb.from("memories").delete().eq("id",memoriaAberta.id);if(error)throw error;if(paths.length)await sb.storage.from(BUCKET).remove(paths);close("viewDialog");await load();status("Lembrança excluída do álbum compartilhado.");}catch(e){console.error(e);status("Não foi possível excluir.",true);}};
-function heart(){let c=document.createElement("span");c.className="floating-heart";c.textContent=Math.random()>.5?"♥":"♡";c.style.left=Math.random()*100+"%";c.style.fontSize=(10+Math.random()*17)+"px";let d=11+Math.random()*12;c.style.animationDuration=d+"s";$(".ambient-hearts").append(c);setTimeout(()=>c.remove(),d*1000);}
-async function start(){contador();setInterval(contador,1000);setInterval(heart,1400);for(let i=0;i<7;i++)setTimeout(heart,i*400);if(!pronto){status("Falta configurar a URL e a chave pública do Supabase no início do script.js.",true);$("#openAdd").disabled=true;return;}try{await load();}catch(e){console.error(e);status("Não consegui conectar ao álbum. Confira a configuração do Supabase.",true);}}
-start();
+
+updateCounter();
+setInterval(updateCounter, 1000);
+
+// ==========================================
+// MENSAGENS E FORMATAÇÃO
+// ==========================================
+
+function showStatus(message) {
+  statusMessage.textContent = message;
+}
+
+function formatDate(dateString) {
+  if (!dateString) return "Uma lembrança especial";
+
+  const date = new Date(`${dateString}T12:00:00`);
+
+  return date.toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+function createStoragePath(file) {
+  const extension = file.name.includes(".")
+    ? file.name.split(".").pop().toLowerCase()
+    : "file";
+
+  return `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
+}
+
+function showError(element, message) {
+  element.textContent = message;
+}
+
+// ==========================================
+// LOGIN E SESSÃO
+// ==========================================
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  loginError.textContent = "";
+  loginButton.disabled = true;
+  loginButton.textContent = "Entrando...";
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  const { error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showError(loginError, "Não foi possível entrar. Confira seu e-mail e sua senha.");
+    loginButton.disabled = false;
+    loginButton.textContent = "Entrar ♥";
+    return;
+  }
+
+  loginForm.reset();
+});
+
+async function handleSession(session) {
+  currentUser = session?.user || null;
+
+  if (currentUser) {
+    authPanel.hidden = true;
+    memoriesSection.hidden = false;
+    await loadMemories();
+  } else {
+    authPanel.hidden = false;
+    memoriesSection.hidden = true;
+    memoryGrid.innerHTML = "";
+    memoriesCache = [];
+  }
+
+  loginButton.disabled = false;
+  loginButton.textContent = "Entrar ♥";
+}
+
+db.auth.onAuthStateChange((_event, session) => {
+  setTimeout(() => {
+    handleSession(session);
+  }, 0);
+});
+
+async function initializeSite() {
+  const { data, error } = await db.auth.getSession();
+
+  if (error) {
+    showError(loginError, "Não foi possível verificar sua sessão. Atualize a página.");
+    return;
+  }
+
+  await handleSession(data.session);
+}
+
+logoutButton.addEventListener("click", async () => {
+  const { error } = await db.auth.signOut();
+
+  if (error) {
+    showStatus("Não foi possível sair da conta. Tente novamente.");
+  }
+});
+
+// ==========================================
+// CARREGAR MEMÓRIAS DO BANCO
+// ==========================================
+
+async function loadMemories() {
+  if (!currentUser) return;
+
+  showStatus("Carregando nossas lembranças...");
+  memoryGrid.innerHTML = "";
+
+  const { data: memories, error } = await db
+    .from("memorias")
+    .select("*")
+    .order("data_memoria", { ascending: false });
+
+  if (error) {
+    showStatus("Não foi possível carregar as lembranças. Confira as permissões do banco.");
+    console.error(error);
+    return;
+  }
+
+  memoriesCache = memories || [];
+
+  if (memoriesCache.length === 0) {
+    showEmptyState();
+    showStatus("");
+    return;
+  }
+
+  for (const memory of memoriesCache) {
+    await renderMemory(memory);
+  }
+
+  showStatus("");
+}
+
+function showEmptyState() {
+  const empty = document.createElement("div");
+  empty.className = "empty-state";
+
+  const icon = document.createElement("div");
+  icon.className = "empty-icon";
+  icon.textContent = "♡";
+
+  const title = document.createElement("h3");
+  title.textContent = "Nosso álbum começa aqui";
+
+  const description = document.createElement("p");
+  description.textContent = "Adicione a primeira lembrança de vocês.";
+
+  empty.append(icon, title, description);
+  memoryGrid.appendChild(empty);
+}
+
+// ==========================================
+// MOSTRAR CADA MEMÓRIA
+// ==========================================
+
+async function renderMemory(memory) {
+  const { data: photos, error } = await db
+    .from("fotos")
+    .select("*")
+    .eq("memoria_id", memory.id)
+    .order("criado_em", { ascending: true })
+    .limit(1);
+
+  if (error) {
+    console.error("Erro ao buscar foto:", error);
+  }
+
+  const photo = photos?.[0];
+
+  const card = document.createElement("button");
+  card.type = "button";
+  card.className = "memory-card";
+
+  const image = document.createElement("img");
+  image.alt = memory.titulo || "Nossa lembrança";
+  image.loading = "lazy";
+
+  if (photo?.arquivo) {
+    const { data: signedImage, error: imageError } = await db
+      .storage
+      .from(BUCKET)
+      .createSignedUrl(photo.arquivo, 3600);
+
+    if (!imageError && signedImage?.signedUrl) {
+      image.src = signedImage.signedUrl;
+    } else {
+      image.alt = "Não foi possível carregar esta foto";
+      console.error(imageError);
+    }
+  }
+
+  const content = document.createElement("div");
+  content.className = "memory-card-content";
+
+  const date = document.createElement("span");
+  date.className = "memory-date";
+  date.textContent = formatDate(memory.data_memoria);
+
+  const title = document.createElement("h3");
+  title.textContent = memory.titulo || "Nossa lembrança";
+
+  content.append(date, title);
+  card.append(image, content);
+
+  card.addEventListener("click", () => {
+    openMemory(memory);
+  });
+
+  memoryGrid.appendChild(card);
+}
+
+// ==========================================
+// ABRIR UMA MEMÓRIA
+// ==========================================
+
+async function openMemory(memory) {
+  selectedMemory = memory;
+
+  document.getElementById("viewTitle").textContent = memory.titulo || "";
+  document.getElementById("viewNote").textContent = memory.descricao || "";
+  document.getElementById("viewDate").textContent = formatDate(memory.data_memoria);
+
+  const viewPhoto = document.getElementById("viewPhoto");
+  const audioArea = document.getElementById("audioArea");
+  const audio = document.getElementById("memoryAudio");
+
+  viewPhoto.removeAttribute("src");
+  audio.pause();
+  audio.removeAttribute("src");
+  audioArea.hidden = true;
+
+  const { data: photos, error: photoError } = await db
+    .from("fotos")
+    .select("*")
+    .eq("memoria_id", memory.id)
+    .limit(1);
+
+  if (photoError) {
+    console.error(photoError);
+  }
+
+  const photo = photos?.[0];
+
+  if (photo?.arquivo) {
+    const { data, error } = await db
+      .storage
+      .from(BUCKET)
+      .createSignedUrl(photo.arquivo, 3600);
+
+    if (!error && data?.signedUrl) {
+      viewPhoto.src = data.signedUrl;
+    }
+  }
+
+  if (memory.musica_url) {
+    const { data, error } = await db
+      .storage
+      .from(BUCKET)
+      .createSignedUrl(memory.musica_url, 3600);
+
+    if (!error && data?.signedUrl) {
+      audio.src = data.signedUrl;
+      audioArea.hidden = false;
+
+      audio.onloadedmetadata = () => {
+        const start = Number(memory.musica_inicio || 0);
+        const end = Number(memory.musica_fim || 0);
+
+        audio.currentTime = Math.min(start, audio.duration || start);
+
+        audio.ontimeupdate = () => {
+          if (end > 0 && audio.currentTime >= end) {
+            audio.pause();
+          }
+        };
+      };
+    } else {
+      console.error("Erro ao carregar música:", error);
+    }
+  }
+
+  viewDialog.showModal();
+}
+
+// ==========================================
+// ABRIR E FECHAR JANELAS
+// ==========================================
+
+openAddButton.addEventListener("click", () => {
+  formError.textContent = "";
+  memoryForm.reset();
+
+  document.getElementById("memoryDate").value =
+    new Date().toISOString().slice(0, 10);
+
+  addDialog.showModal();
+});
+
+document.querySelectorAll("[data-close]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const dialog = document.getElementById(button.dataset.close);
+    dialog.close();
+  });
+});
+
+[addDialog, viewDialog].forEach((dialog) => {
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) {
+      dialog.close();
+    }
+  });
+});
+
+// ==========================================
+// ADICIONAR MEMÓRIA
+// ==========================================
+
+memoryForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (!currentUser) {
+    showError(formError, "Você precisa entrar novamente.");
+    return;
+  }
+
+  formError.textContent = "";
+
+  const submitButton = memoryForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = "Salvando...";
+
+  const title = document.getElementById("memoryTitle").value.trim();
+  const description = document.getElementById("memoryNote").value.trim();
+  const date = document.getElementById("memoryDate").value;
+
+  const photoFile = document.getElementById("memoryPhoto").files[0];
+  const musicFile = document.getElementById("memoryMusic").files[0];
+
+  const musicStart = Number(document.getElementById("musicStart").value || 0);
+  const musicEnd = Number(document.getElementById("musicEnd").value || 0);
+
+  let photoPath = null;
+  let musicPath = null;
+  let memoryId = null;
+
+  try {
+    if (!photoFile) {
+      throw new Error("Escolha uma foto para essa lembrança.");
+    }
+
+    // Primeiro, cria o registro da memória.
+    const { data: memory, error: memoryError } = await db
+      .from("memorias")
+      .insert({
+        titulo: title,
+        descricao: description,
+        data_memoria: date || null,
+        musica_inicio: musicStart,
+        musica_fim: musicEnd || null
+      })
+      .select()
+      .single();
+
+    if (memoryError) throw memoryError;
+
+    memoryId = memory.id;
+
+    // Envia a foto para o bucket privado.
+    photoPath = createStoragePath(photoFile);
+
+    const { error: photoUploadError } = await db
+      .storage
+      .from(BUCKET)
+      .upload(photoPath, photoFile, {
+        contentType: photoFile.type,
+        upsert: false
+      });
+
+    if (photoUploadError) throw photoUploadError;
+
+    // Registra o caminho da foto na tabela fotos.
+    const { error: photoInsertError } = await db
+      .from("fotos")
+      .insert({
+        memoria_id: memoryId,
+        arquivo: photoPath
+      });
+
+    if (photoInsertError) throw photoInsertError;
+
+    // Envia a música, caso tenha sido escolhida.
+    if (musicFile) {
+      musicPath = createStoragePath(musicFile);
+
+      const { error: musicUploadError } = await db
+        .storage
+        .from(BUCKET)
+        .upload(musicPath, musicFile, {
+          contentType: musicFile.type,
+          upsert: false
+        });
+
+      if (musicUploadError) throw musicUploadError;
+
+      const { error: musicUpdateError } = await db
+        .from("memorias")
+        .update({ musica_url: musicPath })
+        .eq("id", memoryId);
+
+      if (musicUpdateError) throw musicUpdateError;
+    }
+
+    memoryForm.reset();
+    addDialog.close();
+
+    await loadMemories();
+
+  } catch (error) {
+    console.error("Erro ao salvar memória:", error);
+
+    // Tenta remover arquivos enviados caso alguma etapa falhe.
+    const pathsToRemove = [photoPath, musicPath].filter(Boolean);
+
+    if (pathsToRemove.length > 0) {
+      await db.storage.from(BUCKET).remove(pathsToRemove);
+    }
+
+    if (memoryId) {
+      await db.from("fotos").delete().eq("memoria_id", memoryId);
+      await db.from("memorias").delete().eq("id", memoryId);
+    }
+
+    showError(
+      formError,
+      error.message || "Não foi possível salvar. Tente novamente."
+    );
+
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Salvar essa memória ♥";
+  }
+});
+
+// ==========================================
+// EXCLUIR MEMÓRIA
+// ==========================================
+
+document.getElementById("deleteMemory").addEventListener("click", async () => {
+  if (!selectedMemory) return;
+
+  const confirmed = confirm(
+    "Tem certeza de que deseja excluir esta lembrança? Essa ação não pode ser desfeita."
+  );
+
+  if (!confirmed) return;
+
+  const deleteButton = document.getElementById("deleteMemory");
+  deleteButton.disabled = true;
+  deleteButton.textContent = "Excluindo...";
+
+  try {
+    const memoryId = selectedMemory.id;
+
+    const { data: photos, error: photosError } = await db
+      .from("fotos")
+      .select("arquivo")
+      .eq("memoria_id", memoryId);
+
+    if (photosError) throw photosError;
+
+    const paths = (photos || [])
+      .map((photo) => photo.arquivo)
+      .filter(Boolean);
+
+    if (selectedMemory.musica_url) {
+      paths.push(selectedMemory.musica_url);
+    }
+
+    if (paths.length > 0) {
+      const { error: storageError } = await db
+        .storage
+        .from(BUCKET)
+        .remove(paths);
+
+      if (storageError) throw storageError;
+    }
+
+    const { error: deletePhotosError } = await db
+      .from("fotos")
+      .delete()
+      .eq("memoria_id", memoryId);
+
+    if (deletePhotosError) throw deletePhotosError;
+
+    const { error: deleteMemoryError } = await db
+      .from("memorias")
+      .delete()
+      .eq("id", memoryId);
+
+    if (deleteMemoryError) throw deleteMemoryError;
+
+    viewDialog.close();
+    selectedMemory = null;
+
+    await loadMemories();
+
+  } catch (error) {
+    console.error("Erro ao excluir:", error);
+    alert("Não foi possível excluir a lembrança. Tente novamente.");
+
+  } finally {
+    deleteButton.disabled = false;
+    deleteButton.textContent = "Excluir esta lembrança";
+  }
+});
+
+// ==========================================
+// INICIAR
+// ==========================================
+
+initializeSite();
