@@ -657,27 +657,34 @@ initializeSite();
 
 /* CASAL: PRESENTES, ROLÊS E AVALIAÇÕES */
 let activeRoleId=null;
-const giftList=document.getElementById("giftList"), roleList=document.getElementById("roleList");
+const giftListMateus=document.getElementById("giftListMateus"),giftListJulia=document.getElementById("giftListJulia"),roleList=document.getElementById("roleList");
 const msg=(id,t)=>{document.getElementById(id).textContent=t||""};
 const node=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;e.textContent=txt??"";return e};
 async function loadCoupleData(){if(currentUser)await Promise.all([loadGifts(),loadRoles()])}
 async function loadGifts(){
  const {data,error}=await db.from("presentes").select("*").order("created_at",{ascending:false});
- if(error){msg("giftStatus","Não carregou. Confira o SQL novas-funcoes.sql.");console.error(error);return}
- giftList.replaceChildren();
- if(!data?.length){giftList.append(node("p","couple-empty","Ainda não adicionamos presentes."));return}
- data.forEach(g=>{const card=node("article","couple-item"+(g.comprado?" is-done":"")),main=node("div","couple-item-main");
- main.append(node("strong","",g.nome),node("small","","Adicionado por "+g.cadastrado_por));
- const label=node("label","check-line","");const cb=document.createElement("input");cb.type="checkbox";cb.checked=g.comprado;
- cb.addEventListener("change",async()=>{const {error:e}=await db.from("presentes").update({comprado:cb.checked}).eq("id",g.id);if(e)alert("Não foi possível atualizar.");await loadGifts()});
- label.append(cb,document.createTextNode(" Já compramos"));card.append(main,label);giftList.append(card)});
+ if(error){msg("giftStatus","Não carregou. Confira as colunas tipo e destinatario da tabela presentes.");console.error(error);return}
+ giftListMateus.replaceChildren();giftListJulia.replaceChildren();
+ const mateus=(data||[]).filter(g=>g.destinatario==="Mateus"),julia=(data||[]).filter(g=>g.destinatario==="Júlia");
+ if(!mateus.length)giftListMateus.append(node("p","couple-empty","Nenhum presente para o Mateus por enquanto."));
+ if(!julia.length)giftListJulia.append(node("p","couple-empty","Nenhum presente para a Júlia por enquanto."));
+ (data||[]).forEach(g=>{
+  const target=g.destinatario==="Mateus"?giftListMateus:giftListJulia;
+  const card=node("article","couple-item gift-item"+(g.comprado?" is-done":"")),main=node("div","couple-item-main");
+  main.append(node("small","gift-type",g.tipo||"Presente"),node("strong","",g.nome),node("small","","Adicionado por "+g.cadastrado_por));
+  const label=node("label","check-line",""),cb=document.createElement("input");cb.type="checkbox";cb.checked=g.comprado;
+  cb.addEventListener("change",async()=>{const {error:e}=await db.from("presentes").update({comprado:cb.checked}).eq("id",g.id);if(e)alert("Não foi possível atualizar.");await loadGifts()});
+  label.append(cb,document.createTextNode(" Já compramos"));card.append(main,label);target.append(card)
+ });
 }
 document.getElementById("saveGift").addEventListener("click",async()=>{
- const name=document.getElementById("giftName").value.trim();if(!name){msg("giftStatus","Digite o nome do presente.");return}
+ const type=document.getElementById("giftType").value.trim(),name=document.getElementById("giftName").value.trim(),creator=document.getElementById("giftCreator").value;
+ if(!type||!name){msg("giftStatus","Preencha o tipo e o nome do presente.");return}
  const b=document.getElementById("saveGift");b.disabled=true;
- const {error}=await db.from("presentes").insert({nome:name,cadastrado_por:document.getElementById("giftCreator").value});b.disabled=false;
- if(error){msg("giftStatus","Erro ao salvar. Confira o SQL novas-funcoes.sql.");console.error(error);return}
- document.getElementById("giftName").value="";msg("giftStatus","Presente adicionado ♥");await loadGifts();
+ const {error}=await db.from("presentes").insert({tipo:type,nome:name,destinatario:creator==="Mateus"?"Júlia":"Mateus",cadastrado_por:creator});
+ b.disabled=false;
+ if(error){msg("giftStatus","Erro ao salvar. Confira se executou o SQL de atualização dos presentes.");console.error(error);return}
+ document.getElementById("giftType").value="";document.getElementById("giftName").value="";msg("giftStatus","Presente adicionado ♥");await loadGifts();
 });
 async function loadRoles(){
  const {data,error}=await db.from("roles").select("*").order("created_at",{ascending:false});
