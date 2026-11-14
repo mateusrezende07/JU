@@ -829,3 +829,9 @@ footer span {
 .gift-type{width:max-content;color:var(--pink-dark);background:var(--pink-light);border-radius:20px;padding:4px 9px;font-size:10px;font-weight:700}
 .gift-item{align-items:center}
 @media(max-width:700px){.gift-columns{grid-template-columns:1fr}.gift-form-row{display:grid;grid-template-columns:1fr}.gift-form-row .grow{width:100%}}
+
+/* Rolês organizados por status de visita */
+.role-columns{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px;align-items:start}
+.role-column{min-width:0;padding:18px;background:rgba(255,255,255,.58);border:1px solid var(--border);border-radius:18px}
+.role-column h3{font-family:"Playfair Display",serif;font-size:25px;font-weight:500;color:var(--pink-dark);margin:0}
+@media(max-width:700px){.role-columns{grid-template-columns:1fr}}
