@@ -97,7 +97,7 @@ function getYouTubeVideoId(value) {
 
   try {
     const url = new URL(value.trim());
-    const host = url.hostname.replace(/^www\\./, "").toLowerCase();
+    const host = url.hostname.toLowerCase().replace("www.", "");
     let videoId = null;
 
     if (host === "youtu.be") {
@@ -384,7 +384,7 @@ async function openMemory(memory) {
       audio.hidden = true;
       audioTip.textContent = "Dê play no vídeo para ouvir a música. O YouTube pode exibir anúncios.";
       audioArea.hidden = false;
-    } else if (!/^https?:\\/\\//i.test(memory.musica_url)) {
+    } else if (!memory.musica_url.startsWith("http://") && !memory.musica_url.startsWith("https://")) {
       // Compatibilidade com músicas que já foram enviadas como arquivo ao site.
       const { data, error } = await db
         .storage
@@ -597,7 +597,7 @@ document.getElementById("deleteMemory").addEventListener("click", async () => {
 
     if (
       selectedMemory.musica_url &&
-      !/^https?:\\/\\//i.test(selectedMemory.musica_url)
+      !selectedMemory.musica_url.startsWith("http://") && !selectedMemory.musica_url.startsWith("https://")
     ) {
       paths.push(selectedMemory.musica_url);
     }
