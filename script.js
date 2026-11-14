@@ -689,8 +689,12 @@ document.getElementById("saveGift").addEventListener("click",async()=>{
 async function loadRoles(){
  const {data,error}=await db.from("roles").select("*").order("created_at",{ascending:false});
  if(error){msg("roleStatus","Não carregou. Confira o SQL novas-funcoes.sql.");console.error(error);return}
- roleList.replaceChildren();if(!data?.length){roleList.append(node("p","couple-empty","Ainda não temos lugares na lista."));return}
- for(const place of data){
+ const placesToGo=document.getElementById("placesToGo"),placesVisited=document.getElementById("placesVisited");
+ placesToGo.replaceChildren();placesVisited.replaceChildren();
+ const pending=(data||[]).filter(place=>!place.visitado),visited=(data||[]).filter(place=>place.visitado);
+ if(!pending.length)placesToGo.append(node("p","couple-empty","Não há lugares pendentes. Que tal escolher o próximo passeio? ♥"));
+ if(!visited.length)placesVisited.append(node("p","couple-empty","Vocês ainda não marcaram nenhum lugar como visitado."));
+ for(const place of [...pending,...visited]){
   const {data:reviews,error:re}=await db.from("avaliacoes_roles").select("*").eq("role_id",place.id);if(re)console.error(re);
   const card=node("article","role-card"+(place.visitado?" is-done":"")),top=node("div","role-card-top"),main=node("div","couple-item-main");
   main.append(node("strong","",place.nome),node("small","","Adicionado por "+place.cadastrado_por));
@@ -706,8 +710,8 @@ async function loadRoles(){
    card.append(grid)
   }else if(place.visitado)card.append(node("p","couple-empty","Esse rolê ainda não tem avaliações."));
   if(place.visitado){const b=node("button","add-button","Avaliar / editar minha nota");b.type="button";b.addEventListener("click",()=>openReview(place,reviews||[]));card.append(b)}
-  else card.append(node("small","muted-note","Marque como visitado para liberar as avaliações."));
-  roleList.append(card)
+  else card.append(node("small","muted-note","Marque como visitado para mover para lugares que já fomos."));
+  (place.visitado?placesVisited:placesToGo).append(card)
  }
 }
 document.getElementById("saveRole").addEventListener("click",async()=>{
