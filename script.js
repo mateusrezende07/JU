@@ -92,6 +92,39 @@ function createStoragePath(file) {
   return `${currentUser.id}/${crypto.randomUUID()}.${extension}`;
 }
 
+function getYouTubeVideoId(value) {
+  if (!value) return null;
+
+  try {
+    const url = new URL(value.trim());
+    const host = url.hostname.replace(/^www\\./, "").toLowerCase();
+    let videoId = null;
+
+    if (host === "youtu.be") {
+      videoId = url.pathname.split("/").filter(Boolean)[0];
+    } else if (
+      host === "youtube.com" ||
+      host === "m.youtube.com" ||
+      host === "music.youtube.com"
+    ) {
+      if (url.pathname === "/watch") {
+        videoId = url.searchParams.get("v");
+      } else {
+        const parts = url.pathname.split("/").filter(Boolean);
+        if (["shorts", "embed", "live"].includes(parts[0])) {
+          videoId = parts[1];
+        }
+      }
+    }
+
+    return videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)
+      ? videoId
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 function showError(element, message) {
   element.textContent = message;
 }
@@ -296,11 +329,17 @@ async function openMemory(memory) {
   const viewPhoto = document.getElementById("viewPhoto");
   const audioArea = document.getElementById("audioArea");
   const audio = document.getElementById("memoryAudio");
+  const youtubeFrame = document.getElementById("memoryYoutube");
+  const audioTip = document.getElementById("audioTip");
 
   viewPhoto.removeAttribute("src");
   audio.pause();
   audio.removeAttribute("src");
+  youtubeFrame.removeAttribute("src");
+  youtubeFrame.hidden = true;
+  audio.hidden = false;
   audioArea.hidden = true;
+  audioTip.textContent = "";
 
   const { data: photos, error: photoError } = await db
     .from("fotos")
@@ -326,29 +365,54 @@ async function openMemory(memory) {
   }
 
   if (memory.musica_url) {
-    const { data, error } = await db
-      .storage
-      .from(BUCKET)
-      .createSignedUrl(memory.musica_url, 3600);
+    const youtubeId = getYouTubeVideoId(memory.musica_url);
 
-    if (!error && data?.signedUrl) {
-      audio.src = data.signedUrl;
+    if (youtubeId) {
+      const start = Math.max(0, Number(memory.musica_inicio || 0));
+      const end = Math.max(0, Number(memory.musica_fim || 0));
+      const params = new URLSearchParams({
+        start: String(Math.floor(start)),
+        controls: "1",
+        rel: "0",
+        playsinline: "1"
+      });
+
+      if (end > start) params.set("end", String(Math.floor(end)));
+
+      youtubeFrame.src = `https://www.youtube-nocookie.com/embed/${youtubeId}?${params.toString()}`;
+      youtubeFrame.hidden = false;
+      audio.hidden = true;
+      audioTip.textContent = "Dê play no vídeo para ouvir a música. O YouTube pode exibir anúncios.";
       audioArea.hidden = false;
+    } else if (!/^https?:\\/\\//i.test(memory.musica_url)) {
+      // Compatibilidade com músicas que já foram enviadas como arquivo ao site.
+      const { data, error } = await db
+        .storage
+        .from(BUCKET)
+        .createSignedUrl(memory.musica_url, 3600);
 
-      audio.onloadedmetadata = () => {
-        const start = Number(memory.musica_inicio || 0);
-        const end = Number(memory.musica_fim || 0);
+      if (!error && data?.signedUrl) {
+        audio.src = data.signedUrl;
+        audioArea.hidden = false;
 
-        audio.currentTime = Math.min(start, audio.duration || start);
+        audio.onloadedmetadata = () => {
+          const start = Number(memory.musica_inicio || 0);
+          const end = Number(memory.musica_fim || 0);
 
-        audio.ontimeupdate = () => {
-          if (end > 0 && audio.currentTime >= end) {
-            audio.pause();
-          }
+          audio.currentTime = Math.min(start, audio.duration || start);
+
+          audio.ontimeupdate = () => {
+            if (end > 0 && audio.currentTime >= end) {
+              audio.pause();
+            }
+          };
         };
-      };
+      } else {
+        console.error("Erro ao carregar música:", error);
+      }
     } else {
-      console.error("Erro ao carregar música:", error);
+      audioTip.textContent = "Esse link não parece ser um endereço válido do YouTube.";
+      audioArea.hidden = false;
     }
   }
 
@@ -407,18 +471,25 @@ memoryForm.addEventListener("submit", async (event) => {
   const date = document.getElementById("memoryDate").value;
 
   const photoFile = document.getElementById("memoryPhoto").files[0];
-  const musicFile = document.getElementById("memoryMusic").files[0];
+  const musicUrl = document.getElementById("memoryMusicUrl").value.trim();
 
   const musicStart = Number(document.getElementById("musicStart").value || 0);
   const musicEnd = Number(document.getElementById("musicEnd").value || 0);
 
   let photoPath = null;
-  let musicPath = null;
   let memoryId = null;
 
   try {
     if (!photoFile) {
       throw new Error("Escolha uma foto para essa lembrança.");
+    }
+
+    if (musicUrl && !getYouTubeVideoId(musicUrl)) {
+      throw new Error("Cole um link válido de vídeo do YouTube.");
+    }
+
+    if (musicEnd > 0 && musicEnd <= musicStart) {
+      throw new Error("O tempo final da música precisa ser maior que o inicial.");
     }
 
     // Primeiro, cria o registro da memória.
@@ -428,6 +499,7 @@ memoryForm.addEventListener("submit", async (event) => {
         titulo: title,
         descricao: description,
         data_memoria: date || null,
+        musica_url: musicUrl || null,
         musica_inicio: musicStart,
         musica_fim: musicEnd || null
       })
@@ -461,28 +533,6 @@ memoryForm.addEventListener("submit", async (event) => {
 
     if (photoInsertError) throw photoInsertError;
 
-    // Envia a música, caso tenha sido escolhida.
-    if (musicFile) {
-      musicPath = createStoragePath(musicFile);
-
-      const { error: musicUploadError } = await db
-        .storage
-        .from(BUCKET)
-        .upload(musicPath, musicFile, {
-          contentType: musicFile.type,
-          upsert: false
-        });
-
-      if (musicUploadError) throw musicUploadError;
-
-      const { error: musicUpdateError } = await db
-        .from("memorias")
-        .update({ musica_url: musicPath })
-        .eq("id", memoryId);
-
-      if (musicUpdateError) throw musicUpdateError;
-    }
-
     memoryForm.reset();
     addDialog.close();
 
@@ -492,7 +542,7 @@ memoryForm.addEventListener("submit", async (event) => {
     console.error("Erro ao salvar memória:", error);
 
     // Tenta remover arquivos enviados caso alguma etapa falhe.
-    const pathsToRemove = [photoPath, musicPath].filter(Boolean);
+    const pathsToRemove = [photoPath].filter(Boolean);
 
     if (pathsToRemove.length > 0) {
       await db.storage.from(BUCKET).remove(pathsToRemove);
@@ -545,7 +595,10 @@ document.getElementById("deleteMemory").addEventListener("click", async () => {
       .map((photo) => photo.arquivo)
       .filter(Boolean);
 
-    if (selectedMemory.musica_url) {
+    if (
+      selectedMemory.musica_url &&
+      !/^https?:\\/\\//i.test(selectedMemory.musica_url)
+    ) {
       paths.push(selectedMemory.musica_url);
     }
 
