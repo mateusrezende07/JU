@@ -38,6 +38,7 @@ const logoutButton = document.getElementById("logoutButton");
 let currentUser = null;
 let selectedMemory = null;
 let memoriesCache = [];
+let memoriesLoadId = 0;
 
 // ==========================================
 // CONTADOR DO RELACIONAMENTO
@@ -208,6 +209,8 @@ logoutButton.addEventListener("click", async () => {
 async function loadMemories() {
   if (!currentUser) return;
 
+  // Impede que carregamentos simultâneos adicionem os mesmos cards mais de uma vez.
+  const loadId = ++memoriesLoadId;
   showStatus("Carregando nossas lembranças...");
   memoryGrid.innerHTML = "";
 
@@ -215,6 +218,8 @@ async function loadMemories() {
     .from("memorias")
     .select("*")
     .order("data_memoria", { ascending: false });
+
+  if (loadId !== memoriesLoadId) return;
 
   if (error) {
     showStatus("Não foi possível carregar as lembranças. Confira as permissões do banco.");
@@ -231,10 +236,11 @@ async function loadMemories() {
   }
 
   for (const memory of memoriesCache) {
-    await renderMemory(memory);
+    if (loadId !== memoriesLoadId) return;
+    await renderMemory(memory, loadId);
   }
 
-  showStatus("");
+  if (loadId === memoriesLoadId) showStatus("");
 }
 
 function showEmptyState() {
@@ -259,7 +265,7 @@ function showEmptyState() {
 // MOSTRAR CADA MEMÓRIA
 // ==========================================
 
-async function renderMemory(memory) {
+async function renderMemory(memory, loadId) {
   const { data: photos, error } = await db
     .from("fotos")
     .select("*")
@@ -312,6 +318,8 @@ async function renderMemory(memory) {
     openMemory(memory);
   });
 
+  // Uma sessão/carregada mais recente pode ter começado enquanto buscávamos a foto.
+  if (loadId !== memoriesLoadId) return;
   memoryGrid.appendChild(card);
 }
 
