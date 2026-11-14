@@ -104,8 +104,9 @@
     <label>Foto da lembrança
       <input id="memoryPhoto" type="file" accept="image/*" required>
     </label>
-    <label>Música dessa memória <small>(opcional)</small>
-      <input id="memoryMusic" type="file" accept="audio/*">
+    <label>Link da música no YouTube <small>(opcional)</small>
+      <input id="memoryMusicUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="url">
+      <small>Cole o link de um vídeo ou música do YouTube.</small>
     </label>
     <div class="song-range">
       <label>Começar em (segundos)
@@ -130,6 +131,13 @@
       <p id="viewNote"></p>
       <div class="audio-area" id="audioArea">
         <div class="audio-label">♫ <span id="audioName">A música dessa lembrança</span></div>
+        <iframe
+          id="memoryYoutube"
+          title="Música desta lembrança no YouTube"
+          hidden
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen></iframe>
         <audio id="memoryAudio" controls preload="metadata"></audio>
         <p class="audio-tip" id="audioTip"></p>
       </div>
