@@ -527,7 +527,8 @@ button {
 
 .view-card {
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .view-photo-wrap {
