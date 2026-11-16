@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffe8f0"><title>Nossa lista de presentes | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head><body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main"><section class="subpage-hero"><span class="eyebrow">PLANOS E DESEJOS</span><h1>Nossa lista de presentes</h1><p>Ideias de presentes para surpreender um ao outro e guardar todos os desejos de vocês.</p></section>
+<section class="auth-panel page-auth" id="pageAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p>
+<form id="pageLoginForm"><label for="pageLoginEmail">E-mail</label><input id="pageLoginEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="pageLoginPassword">Senha</label><input id="pageLoginPassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="pageLoginButton">Entrar ♥</button><p class="form-error" id="pageLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="pageContent" hidden><div class="section-heading"><div><span class="eyebrow">PLANOS E DESEJOS</span><h2>Nossa lista de presentes</h2></div><button class="add-button logout-button" id="pageLogout" type="button">Sair</button></div>
+<div class="couple-form-row gift-form-row"><label>Quem adiciona?<select id="giftCreator"><option>Mateus</option><option>Júlia</option></select></label><label>Presente para?<select id="giftRecipient"><option>Mateus</option><option>Júlia</option></select></label><label>Tipo de presente<input id="giftType" maxlength="50" placeholder="Ex.: Perfume"></label><label class="grow">Nome do presente<input id="giftName" maxlength="90" placeholder="Ex.: Effervescent"></label><button class="submit-button compact" id="saveGift" type="button">Adicionar ♥</button></div>
+<p class="status-message" id="giftStatus" role="status"></p><div class="gift-columns"><div class="gift-column"><h3>Presentes do Mateus</h3><p class="gift-subtitle">O que queremos dar para ele.</p><div class="couple-list" id="giftListMateus"></div></div><div class="gift-column"><h3>Presentes da Júlia</h3><p class="gift-subtitle">O que queremos dar para ela.</p><div class="couple-list" id="giftListJulia"></div></div></div></section>
+</main><footer>feito com carinho para a Júlia <span>♥</span></footer><script src="./couple.js"></script></body></html>
