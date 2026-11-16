@@ -835,3 +835,23 @@ footer span {
 .role-column{min-width:0;padding:18px;background:rgba(255,255,255,.58);border:1px solid var(--border);border-radius:18px}
 .role-column h3{font-family:"Playfair Display",serif;font-size:25px;font-weight:500;color:var(--pink-dark);margin:0}
 @media(max-width:700px){.role-columns{grid-template-columns:1fr}}
+
+/* Navegação para as páginas independentes de presentes e rolês */
+.areas-section{width:min(1000px,calc(100% - 40px));margin:0 auto 90px;padding-top:35px;border-top:1px solid var(--border)}
+.area-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.area-card{display:flex;flex-direction:column;align-items:flex-start;min-height:260px;padding:28px;text-decoration:none;color:var(--text);background:#fff;border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.area-card:hover{transform:translateY(-5px);box-shadow:0 18px 45px rgba(143,82,105,.14)}
+.area-icon{font-size:32px;margin-bottom:18px}
+.area-card h3{font:500 27px "Playfair Display",serif;margin:10px 0}
+.area-card p{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 18px}
+.area-open{margin-top:auto;color:var(--pink-dark);font-size:12px;font-weight:700}
+.page-topbar{justify-content:space-between}
+.back-home{color:var(--pink-dark);font-size:12px;font-weight:700;text-decoration:none}
+.subpage-main{width:min(1000px,calc(100% - 40px));margin:0 auto 80px;min-height:60vh}
+.subpage-hero{text-align:center;padding:65px 20px 45px}
+.subpage-hero h1{font:500 clamp(38px,6vw,58px) "Playfair Display",serif;color:#674c56;margin:14px 0}
+.subpage-hero p{max-width:600px;margin:auto;color:var(--muted);font-size:14px;line-height:1.8}
+.page-auth{margin:0 auto 60px}
+.subpage-content{margin:0 auto 70px}
+.subpage-content .section-heading{align-items:center}
+@media(max-width:650px){.area-cards{grid-template-columns:1fr}.area-card{min-height:220px}.page-topbar{min-height:80px}.back-home{font-size:10px}.subpage-hero{padding:45px 10px 30px}}
