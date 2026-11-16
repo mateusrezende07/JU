@@ -165,11 +165,15 @@ async function handleSession(session) {
   if (currentUser) {
     authPanel.hidden = true;
     memoriesSection.hidden = false;
+    const areas = document.getElementById("nosso-cantinho");
+    if (areas) areas.hidden = false;
     await loadMemories();
     await loadCoupleData();
   } else {
     authPanel.hidden = false;
     memoriesSection.hidden = true;
+    const areas = document.getElementById("nosso-cantinho");
+    if (areas) areas.hidden = true;
     memoryGrid.innerHTML = "";
     memoriesCache = [];
   }
