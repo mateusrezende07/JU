@@ -79,24 +79,14 @@
   </section>
 
 
-<section class="couple-section" id="presentes">
- <div class="section-heading"><div><span class="eyebrow">PLANOS E DESEJOS</span><h2>Presentes para <em>o futuro.</em></h2><p class="section-intro">Uma listinha do que queremos dar um ao outro.</p></div></div>
- <div class="couple-form-row gift-form-row"><label>Quem adiciona?<select id="giftCreator"><option>Mateus</option><option>Júlia</option></select></label><label>Presente para?<select id="giftRecipient"><option>Mateus</option><option>Júlia</option></select></label><label>Tipo de presente<input id="giftType" maxlength="50" placeholder="Ex.: Perfume"></label><label class="grow">Nome do presente<input id="giftName" maxlength="90" placeholder="Ex.: Effervescent"></label><button class="submit-button compact" id="saveGift" type="button">Adicionar ♥</button></div>
- <p class="status-message" id="giftStatus"></p><div class="gift-columns"><div class="gift-column"><h3>Presentes do Mateus</h3><p class="gift-subtitle">O que queremos dar para ele.</p><div class="couple-list" id="giftListMateus"></div></div><div class="gift-column"><h3>Presentes da Júlia</h3><p class="gift-subtitle">O que queremos dar para ela.</p><div class="couple-list" id="giftListJulia"></div></div></div>
+<section class="areas-section" id="nosso-cantinho" hidden>
+  <div class="section-heading"><div><span class="eyebrow">NOSSO CANTINHO</span><h2>Mais coisas <em>nossas.</em></h2><p class="section-intro">Dois espaços para organizar nossos planos e desejos.</p></div></div>
+  <div class="area-cards">
+    <a class="area-card" href="./presentes.html"><span class="area-icon">🎁</span><span class="eyebrow">PLANOS E DESEJOS</span><h3>Nossa lista de presentes</h3><p>Ideias de presentes para o Mateus e para a Júlia, tudo em um só lugar.</p><span class="area-open">Abrir página →</span></a>
+    <a class="area-card" href="./roles.html"><span class="area-icon">♡</span><span class="eyebrow">LUGARES E EXPERIÊNCIAS</span><h3>Nossos rolês</h3><p>Lugares que queremos conhecer, passeios que já fizemos e nossas avaliações.</p><span class="area-open">Abrir página →</span></a>
+  </div>
 </section>
-<section class="couple-section" id="roles">
- <div class="section-heading"><div><span class="eyebrow">LUGARES E EXPERIÊNCIAS</span><h2>Nossos próximos <em>rolês.</em></h2><p class="section-intro">Lugares que queremos conhecer e avaliar depois.</p></div></div>
- <div class="couple-form-row"><label>Quem adiciona?<select id="roleCreator"><option>Mateus</option><option>Júlia</option></select></label><label class="grow">Nome do lugar<input id="roleName" maxlength="100" placeholder="Ex.: Jardim Botânico"></label><button class="submit-button compact" id="saveRole" type="button">Adicionar ♥</button></div>
- <p class="status-message" id="roleStatus"></p><div class="role-columns"><div class="role-column"><h3>Lugares para ir</h3><p class="gift-subtitle">Nossos próximos destinos e passeios.</p><div class="couple-list" id="placesToGo"></div></div><div class="role-column"><h3>Lugares que já fomos</h3><p class="gift-subtitle">Nossas lembranças e avaliações.</p><div class="couple-list" id="placesVisited"></div></div></div>
-</section>
-<dialog class="dialog" id="reviewDialog"><form id="reviewForm" class="dialog-card"><button type="button" class="close-button" data-close="reviewDialog">×</button><span class="eyebrow">NOSSA EXPERIÊNCIA</span><h2 id="reviewHeading">Como foi?</h2>
-<label>Quem está avaliando?<select id="reviewPerson"><option>Mateus</option><option>Júlia</option></select></label>
-<label>Nota de 0 a 10<input id="reviewScore" type="number" min="0" max="10" step="0.5" required></label>
-<label>Comentário (opcional)<textarea id="reviewComment" rows="3" maxlength="500"></textarea></label>
-<label>Voltaria novamente?<select id="reviewAgain"><option value="true">Sim ♥</option><option value="false">Não</option></select></label>
-<button class="submit-button" type="submit">Salvar avaliação ♥</button><p class="form-error" id="reviewError"></p></form></dialog>
-
-  <section class="quote-section">
+<section class="quote-section">
     <span class="quote-mark">“</span>
     <p>Não são só os grandes momentos.<br>São todos os pequenos instantes com você.</p>
     <small>com amor, Mateus ♥</small>
