@@ -855,3 +855,31 @@ footer span {
 .subpage-content{margin:0 auto 70px}
 .subpage-content .section-heading{align-items:center}
 @media(max-width:650px){.area-cards{grid-template-columns:1fr}.area-card{min-height:220px}.page-topbar{min-height:80px}.back-home{font-size:10px}.subpage-hero{padding:45px 10px 30px}}
+
+
+/* Página de filmes assistidos */
+.film-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:22px;background:#fff;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+.film-form label{display:flex;flex-direction:column;gap:7px;color:var(--text);font-size:12px;font-weight:600}
+.film-form input,.film-form textarea,.film-form select{width:100%;border:1px solid var(--border);border-radius:10px;padding:12px 13px;background:#fffdfd;color:var(--text);font:inherit;outline:none}
+.film-form input:focus,.film-form textarea:focus,.film-form select:focus{border-color:var(--pink);box-shadow:0 0 0 3px rgba(217,130,159,.12)}
+.film-form textarea{resize:vertical;min-height:95px}
+.film-form .full{grid-column:1/-1}
+.film-form-actions{display:flex;gap:10px;align-items:center}
+.film-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:22px}
+.film-card{overflow:hidden;background:#fff;border:1px solid var(--border);border-radius:17px;box-shadow:0 7px 25px rgba(143,82,105,.06)}
+.film-poster{width:100%;height:310px;display:block;object-fit:cover;background:var(--pink-light)}
+.film-card-body{padding:17px}
+.film-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.film-card h3{font:500 22px "Playfair Display",serif;margin:0;color:var(--text)}
+.film-rating{flex-shrink:0;padding:6px 9px;border-radius:20px;background:var(--pink-light);color:var(--pink-dark);font-size:12px;font-weight:700}
+.film-meta{color:var(--muted);font-size:11px;margin:8px 0 12px}
+.film-note{color:#765563;font-size:13px;line-height:1.7;white-space:pre-wrap;margin:0 0 14px}
+.film-by{color:var(--muted);font-size:10px}
+.film-actions{display:flex;gap:8px;margin-top:14px}
+.film-actions button{border:1px solid var(--border);border-radius:20px;padding:8px 13px;background:#fff;color:var(--pink-dark);font-size:11px;font-weight:700}
+.film-actions button:hover{background:var(--pink-light)}
+.film-empty{grid-column:1/-1;padding:55px 20px;text-align:center;background:#fff;border:1px dashed #e7bdcb;border-radius:18px;color:var(--muted)}
+.film-empty strong{display:block;font:500 24px "Playfair Display",serif;color:var(--text);margin:8px}
+.film-preview{width:100%;max-height:240px;object-fit:contain;background:var(--pink-light);border-radius:10px}
+@media(max-width:800px){.film-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.film-poster{height:270px}}
+@media(max-width:560px){.film-form,.film-grid{grid-template-columns:1fr}.film-form .full{grid-column:auto}.film-poster{height:360px}}
