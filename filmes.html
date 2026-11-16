@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffe8f0"><title>Filmes que assistimos | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main">
+<section class="subpage-hero"><span class="eyebrow">NOITE DE CINEMA</span><h1>Filmes que assistimos</h1><p>Uma coleção dos filmes que vimos juntos. Guardem o pôster, a nota e aquele apontamento sobre o que acharam. ♥</p></section>
+<section class="auth-panel page-auth" id="pageAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p>
+<form id="pageLoginForm"><label for="pageLoginEmail">E-mail</label><input id="pageLoginEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="pageLoginPassword">Senha</label><input id="pageLoginPassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="pageLoginButton">Entrar ♥</button><p class="form-error" id="pageLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="pageContent" hidden>
+<div class="section-heading"><div><span class="eyebrow">NOSSO CATÁLOGO</span><h2>Nossa sessão de <em>cinema.</em></h2><p class="section-intro">Cada filme, uma lembrança para guardar.</p></div><button class="add-button logout-button" id="pageLogout" type="button">Sair</button></div>
+<form id="filmForm" class="film-form">
+<label>Quem está cadastrando?<select id="filmCreator"><option>Mateus</option><option>Júlia</option></select></label>
+<label>Nome do filme<input id="filmTitle" maxlength="120" required placeholder="Ex.: Como Eu Era Antes de Você"></label>
+<label>Ano de lançamento<input id="filmYear" type="number" min="1888" max="2100" placeholder="Ex.: 2016"></label>
+<label>Gênero<input id="filmGenre" maxlength="60" placeholder="Ex.: Romance, drama"></label>
+<label>Nota de 0 a 10<input id="filmRating" type="number" min="0" max="10" step="0.5" placeholder="Ex.: 9" required></label>
+<label>Data em que assistimos<input id="filmDate" type="date"></label>
+<label class="full">URL da imagem do pôster<input id="filmImage" type="url" placeholder="https://..."></label>
+<div class="full"><img id="filmPreview" class="film-preview" alt="Prévia do pôster" hidden></div>
+<label class="full">Nosso apontamento / opinião<textarea id="filmNote" maxlength="1200" placeholder="O que achamos do filme? Melhor cena, o que marcou, se recomendamos..."></textarea></label>
+<div class="full film-form-actions"><button class="submit-button compact" id="filmSubmit" type="submit">Adicionar filme ♥</button><button class="add-button logout-button" id="filmCancel" type="button" hidden>Cancelar edição</button></div>
+<p class="form-error full" id="filmError" role="alert"></p>
+</form>
+<p class="status-message" id="filmStatus" role="status"></p>
+<div class="film-grid" id="filmGrid"></div>
+</section></main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./filmes.js"></script></body></html>
