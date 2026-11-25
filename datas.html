@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffe8f0">
+<title>Datas importantes | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./datas.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main">
+<section class="subpage-hero"><span class="eyebrow">CADA DATA TEM UM SIGNIFICADO</span><h1>Nossos dias <em>especiais.</em></h1><p>Aniversários, primeiro encontro, primeiro beijo e todas as datas que merecem ser lembradas.</p></section>
+<section class="auth-panel page-auth" id="datesAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p>
+<form id="datesLoginForm"><label for="datesEmail">E-mail</label><input id="datesEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="datesPassword">Senha</label><input id="datesPassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="datesLoginButton">Entrar ♥</button><p class="form-error" id="datesLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="datesContent" hidden>
+<div class="section-heading"><div><span class="eyebrow">NOSSO CALENDÁRIO</span><h2>Datas para <em>guardar.</em></h2><p class="section-intro" id="datesSummary">Carregando nossas datas...</p></div><button class="add-button logout-button" id="datesLogout" type="button">Sair</button></div>
+<form class="date-form" id="dateForm">
+<label>Qual é a ocasião?<input id="dateTitle" maxlength="90" required placeholder="Ex.: Nosso primeiro beijo"></label>
+<label>Data especial<input id="dateValue" type="date" required></label>
+<label class="date-description">Uma lembrança sobre essa data <small>(opcional)</small><textarea id="dateDescription" maxlength="350" rows="2" placeholder="Por que esse dia é importante para vocês?"></textarea></label>
+<label class="date-repeat"><input id="dateAnnual" type="checkbox" checked> Essa data se repete todos os anos</label>
+<button class="submit-button" id="saveDate" type="submit">Guardar essa data ♥</button>
+<p class="form-error date-error" id="dateError" role="alert"></p>
+</form>
+<div class="dates-list-heading"><h2>O que vem por aí</h2><span>Contagem regressiva</span></div>
+<div class="dates-grid" id="datesList"></div>
+</section></main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./datas.js"></script></body></html>
