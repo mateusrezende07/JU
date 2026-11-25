@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffe8f0">
+<title>Nossa lista de sonhos | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./sonhos.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main">
+<section class="subpage-hero"><span class="eyebrow">TUDO O QUE AINDA QUEREMOS VIVER</span><h1>Nossa lista de <em>sonhos.</em></h1><p>Pequenos e grandes planos para transformar em histórias que um dia vamos contar.</p></section>
+<section class="auth-panel page-auth" id="dreamAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p>
+<form id="dreamLoginForm"><label for="dreamEmail">E-mail</label><input id="dreamEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="dreamPassword">Senha</label><input id="dreamPassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="dreamLoginButton">Entrar ♥</button><p class="form-error" id="dreamLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="dreamContent" hidden>
+<div class="section-heading"><div><span class="eyebrow">NOSSO FUTURO</span><h2>Sonhos que vamos <em>realizar.</em></h2><p class="section-intro" id="dreamSummary">Carregando nossos sonhos...</p></div><button class="add-button logout-button" id="dreamLogout" type="button">Sair</button></div>
+<form class="dream-form" id="dreamForm">
+<label>Qual é o sonho?<input id="dreamTitle" maxlength="100" required placeholder="Ex.: Conhecer uma praia juntos"></label>
+<label>Detalhes <small>(opcional)</small><textarea id="dreamDescription" maxlength="450" rows="3" placeholder="Onde, quando ou por que queremos fazer isso?"></textarea></label>
+<label>Prioridade<select id="dreamPriority"><option value="normal">Quando surgir a oportunidade</option><option value="high">Queremos muito realizar!</option><option value="low">Um dia, sem pressa</option></select></label>
+<button class="submit-button" id="saveDream" type="submit">Adicionar à nossa lista ♥</button><p class="form-error dream-error" id="dreamError" role="alert"></p>
+</form>
+<div class="dream-list-heading"><h2>Nossos planos</h2><span>Marquem quando realizarem ♥</span></div>
+<div class="dream-grid" id="dreamList"></div>
+<div class="dream-list-heading completed-heading"><h2>Sonhos realizados</h2><span>Olha quanta coisa já vivemos!</span></div>
+<div class="dream-grid" id="completedDreamList"></div>
+</section></main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./sonhos.js"></script></body></html>
