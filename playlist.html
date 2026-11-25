@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffe8f0">
+<title>Nossa playlist ♥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./playlist.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar">
+  <div class="name"><span>♥</span> JÚLIA & MATEUS</div>
+  <a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a>
+</header>
+<main class="playlist-main">
+  <section class="playlist-hero">
+    <span class="eyebrow">A TRILHA SONORA DA NOSSA HISTÓRIA</span>
+    <h1>Nossa <em>playlist.</em></h1>
+    <p>Cada música guarda um pedacinho de um momento nosso. Aqui estão reunidas as músicas que vocês já adicionaram às lembranças.</p>
+    <div class="playlist-count" id="playlistCount" hidden></div>
+  </section>
+
+  <section class="playlist-login" id="playlistLogin">
+    <span class="eyebrow">NOSSO CANTINHO PRIVADO</span>
+    <h2>Entre para ouvir <em>nossas músicas.</em></h2>
+    <form id="playlistLoginForm">
+      <label for="playlistEmail">E-mail</label>
+      <input id="playlistEmail" type="email" autocomplete="username" required placeholder="Seu e-mail">
+      <label for="playlistPassword">Senha</label>
+      <input id="playlistPassword" type="password" autocomplete="current-password" required placeholder="Sua senha">
+      <button class="submit-button" id="playlistLoginButton" type="submit">Entrar ♥</button>
+      <p class="form-error" id="playlistLoginError" role="alert"></p>
+    </form>
+  </section>
+
+  <section class="playlist-content" id="playlistContent" hidden>
+    <div class="playlist-toolbar">
+      <p id="playlistStatus" role="status">Reunindo nossas músicas…</p>
+      <div class="playlist-actions">
+        <label class="sort-label" for="playlistSort">Organizar
+          <select id="playlistSort">
+            <option value="oldest">Mais antigas primeiro</option>
+            <option value="newest">Mais recentes primeiro</option>
+          </select>
+        </label>
+        <button class="add-button" id="playlistLogout" type="button">Sair</button>
+      </div>
+    </div>
+    <div class="playlist-list" id="playlistList"></div>
+  </section>
+</main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./playlist.js"></script>
+</body>
+</html>
