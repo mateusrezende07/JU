@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffe8f0">
+<title>Nossa história ♥</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="./timeline.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar">
+  <div class="name"><span>♥</span> JÚLIA & MATEUS</div>
+  <a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a>
+</header>
+<main class="timeline-main">
+  <section class="timeline-hero">
+    <span class="eyebrow">CADA DATA, UM PEDACINHO DE NÓS</span>
+    <h1>Nossa <em>história.</em></h1>
+    <p>Uma viagem por tudo o que já vivemos. Cada lembrança que vocês guardaram aqui ganha seu lugar nesta linha do tempo.</p>
+    <div class="timeline-summary" id="timelineSummary" hidden></div>
+  </section>
+  <section class="timeline-login" id="timelineLogin">
+    <span class="eyebrow">NOSSO CANTINHO PRIVADO</span>
+    <h2>Entre para rever <em>nossa história.</em></h2>
+    <form id="timelineLoginForm">
+      <label for="timelineEmail">E-mail</label>
+      <input id="timelineEmail" type="email" autocomplete="username" required placeholder="Seu e-mail">
+      <label for="timelinePassword">Senha</label>
+      <input id="timelinePassword" type="password" autocomplete="current-password" required placeholder="Sua senha">
+      <button class="submit-button" id="timelineLoginButton" type="submit">Entrar ♥</button>
+      <p class="form-error" id="timelineLoginError" role="alert"></p>
+    </form>
+  </section>
+  <section id="timelineContent" hidden>
+    <div class="timeline-toolbar">
+      <p id="timelineStatus" role="status">Reunindo nossas lembranças…</p>
+      <button class="add-button" id="timelineLogout" type="button">Sair</button>
+    </div>
+    <div class="timeline-list" id="timelineList"></div>
+  </section>
+</main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./timeline.js"></script>
+</body>
+</html>
