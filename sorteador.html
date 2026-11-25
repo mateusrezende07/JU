@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffe8f0">
+<title>Sorteador de encontros | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./sorteador.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main">
+<section class="subpage-hero"><span class="eyebrow">UM PLANINHO A DOIS</span><h1>Nosso próximo <em>encontro.</em></h1><p>Deixem o destino escolher! Vamos sortear um lugar da lista de rolês que vocês ainda não visitaram.</p></section>
+<section class="auth-panel page-auth" id="pageAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p>
+<form id="pageLoginForm"><label for="pageLoginEmail">E-mail</label><input id="pageLoginEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="pageLoginPassword">Senha</label><input id="pageLoginPassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="pageLoginButton">Entrar ♥</button><p class="form-error" id="pageLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="pageContent" hidden>
+<div class="section-heading"><div><span class="eyebrow">A PRÓXIMA AVENTURA</span><h2>Deixa a sorte <em>decidir.</em></h2><p class="section-intro" id="drawCount">Carregando rolês...</p></div><button class="add-button logout-button" id="pageLogout" type="button">Sair</button></div>
+<div class="draw-panel">
+<div class="draw-decoration" aria-hidden="true">♡</div>
+<p class="draw-kicker">JÚLIA & MATEUS</p>
+<h2 id="drawTitle">Onde vamos juntos?</h2>
+<p id="drawHint">O sorteio usa os lugares ainda não visitados em “Nossos rolês”.</p>
+<div class="draw-result" id="drawResult" aria-live="polite">
+<div class="draw-placeholder"><span>🎲</span><strong>O próximo encontro pode ser uma surpresa...</strong><small>Cliquem no botão para descobrir!</small></div>
+</div>
+<div class="draw-actions"><button class="submit-button" id="drawButton" type="button">Sortear nosso encontro ♥</button><button class="add-button" id="refreshButton" type="button">↻ Atualizar lista</button></div>
+<p class="draw-status" id="drawStatus" role="status"></p>
+<a class="draw-back-link" href="./roles.html">Adicionar ou editar nossos rolês →</a>
+</div>
+</section></main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./sorteador.js"></script></body></html>
