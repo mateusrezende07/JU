@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffe8f0">
+<title>Nosso mapa de memórias | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main map-page">
+<section class="subpage-hero"><span class="eyebrow">CADA LUGAR, UMA HISTÓRIA</span><h1>Nosso mapa <em>de memórias.</em></h1><p>Um mapa para marcar os lugares que já conhecemos e aqueles que ainda queremos descobrir juntos.</p></section>
+<section class="auth-panel page-auth" id="pageAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p><form id="pageLoginForm"><label for="pageLoginEmail">E-mail</label><input id="pageLoginEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="pageLoginPassword">Senha</label><input id="pageLoginPassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="pageLoginButton">Entrar ♥</button><p class="form-error" id="pageLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="pageContent" hidden>
+<div class="section-heading"><div><span class="eyebrow">NOSSO MUNDO</span><h2>Por onde <em>já passamos.</em></h2><p class="section-intro" id="mapStats">Carregando lugares...</p></div><button class="add-button logout-button" id="pageLogout" type="button">Sair</button></div>
+<div class="map-legend"><span><i class="pin-dot visited"></i> Já fomos</span><span><i class="pin-dot planned"></i> Queremos ir</span></div>
+<div id="coupleMap" aria-label="Mapa dos lugares de Júlia e Mateus"></div>
+<p class="status-message" id="mapStatus" role="status"></p>
+<div class="map-locations"><h2>Completar localização dos rolês</h2><p class="gift-subtitle">Os lugares que já estavam cadastrados aparecem aqui. Digite o endereço ou cidade para posicionar cada um no mapa.</p><div id="mapPlaceList" class="couple-list"></div></div>
+</section></main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="./mapa.js"></script></body></html>
