@@ -174,6 +174,8 @@ async function handleSession(session) {
     memoriesSection.hidden = true;
     const areas = document.getElementById("nosso-cantinho");
     if (areas) areas.hidden = true;
+    const surpriseSection = document.getElementById("dailySurpriseSection");
+    if (surpriseSection) surpriseSection.hidden = true;
     memoryGrid.innerHTML = "";
     memoriesCache = [];
   }
@@ -659,5 +661,90 @@ document.getElementById("deleteMemory").addEventListener("click", async () => {
 
 initializeSite();
 
-// As páginas de presentes e rolês usam couple.js.
-async function loadCoupleData() {}
+// ==========================================
+// SURPRESA DO DIA
+// ==========================================
+
+function localDateKey() {
+  const now = new Date();
+  return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0")].join("-");
+}
+
+function dailyIndex(dateKey, length) {
+  let hash = 0;
+  for (let i = 0; i < dateKey.length; i++) hash = (hash * 31 + dateKey.charCodeAt(i)) >>> 0;
+  return length ? hash % length : 0;
+}
+
+async function loadCoupleData() {
+  const section = document.getElementById("dailySurpriseSection");
+  const content = document.getElementById("dailySurpriseContent");
+  if (!section || !content || !currentUser) return;
+
+  section.hidden = false;
+  content.replaceChildren();
+  const loading = document.createElement("p");
+  loading.textContent = "Preparando uma surpresa…";
+  content.appendChild(loading);
+
+  try {
+    const [memoryResult, customResult] = await Promise.all([
+      db.from("memorias").select("id,titulo,descricao,data_memoria").order("data_memoria", { ascending: true, nullsFirst: false }),
+      db.from("surpresas").select("id,titulo,mensagem").eq("ativa", true).order("created_at", { ascending: true })
+    ]);
+
+    if (memoryResult.error) throw memoryResult.error;
+    if (customResult.error) throw customResult.error;
+
+    const memories = memoryResult.data || [];
+    const customs = customResult.data || [];
+    const options = [
+      ...memories.map(item => ({ kind: "memory", item })),
+      ...customs.map(item => ({ kind: "custom", item }))
+    ];
+
+    content.replaceChildren();
+    if (!options.length) {
+      const empty = document.createElement("p");
+      empty.textContent = "A primeira surpresa está esperando por vocês. Criem uma mensagem especial ou adicionem uma lembrança ao álbum. ♥";
+      content.appendChild(empty);
+      return;
+    }
+
+    const chosen = options[dailyIndex(localDateKey(), options.length)];
+    const title = document.createElement("h3");
+    const message = document.createElement("p");
+    if (chosen.kind === "memory") {
+      title.textContent = chosen.item.titulo || "Uma lembrança nossa";
+      message.textContent = chosen.item.descricao || "Um momento que merece ser lembrado mais uma vez. ♥";
+      const { data: photos, error: photoError } = await db.from("fotos").select("arquivo").eq("memoria_id", chosen.item.id).order("criado_em", { ascending: true }).limit(1);
+      if (photoError) console.warn("Não foi possível buscar a foto da surpresa:", photoError);
+      const photo = photos?.[0];
+      if (photo?.arquivo) {
+        const { data, error } = await db.storage.from(BUCKET).createSignedUrl(photo.arquivo, 3600);
+        if (!error && data?.signedUrl) {
+          const image = document.createElement("img");
+          image.src = data.signedUrl;
+          image.alt = "Foto da lembrança do dia";
+          image.className = "daily-surprise-photo";
+          content.appendChild(image);
+        }
+      }
+      const date = document.createElement("small");
+      date.textContent = chosen.item.data_memoria ? formatDate(chosen.item.data_memoria) : "Uma lembrança especial";
+      content.append(title, message, date);
+    } else {
+      title.textContent = chosen.item.titulo || "Um recadinho para você";
+      message.textContent = chosen.item.mensagem;
+      content.append(title, message);
+    }
+  } catch (error) {
+    console.error("Erro ao preparar a surpresa do dia:", error);
+    content.replaceChildren();
+    const notice = document.createElement("p");
+    notice.textContent = error?.code === "42P01"
+      ? "Falta configurar as tabelas das novas surpresas no Supabase. Execute o SQL enviado junto com esta atualização."
+      : "Não foi possível carregar a surpresa agora. Atualize a página para tentar novamente.";
+    content.appendChild(notice);
+  }
+}
