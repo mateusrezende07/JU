@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffe8f0">
+<title>Nossas surpresas | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./surpresa.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main">
+<section class="subpage-hero"><span class="eyebrow">UM CARINHO QUE PODE CHEGAR A QUALQUER HORA</span><h1>Nossas <em>surpresas.</em></h1><p>Escrevam mensagens, declarações e pequenos presentes em forma de palavras. Uma surpresa será escolhida para aparecer na página inicial a cada dia.</p></section>
+<section class="auth-panel page-auth" id="surpriseAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p>
+<form id="surpriseLoginForm"><label for="surpriseEmail">E-mail</label><input id="surpriseEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="surprisePassword">Senha</label><input id="surprisePassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="surpriseLoginButton">Entrar ♥</button><p class="form-error" id="surpriseLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="surpriseContent" hidden>
+<div class="section-heading"><div><span class="eyebrow">PALAVRAS GUARDADAS COM CARINHO</span><h2>Prepare uma <em>surpresa.</em></h2><p class="section-intro" id="surpriseSummary">Carregando mensagens...</p></div><button class="add-button logout-button" id="surpriseLogout" type="button">Sair</button></div>
+<form class="surprise-form" id="surpriseForm">
+<label>Título da surpresa<input id="surpriseTitle" maxlength="90" required placeholder="Ex.: Um lembrete para você"></label>
+<label>A mensagem<textarea id="surpriseMessage" maxlength="700" rows="4" required placeholder="Escreva algo que gostaria que a outra pessoa lesse..."></textarea></label>
+<button class="submit-button" id="saveSurprise" type="submit">Guardar surpresa ♥</button><p class="form-error" id="surpriseError" role="alert"></p>
+</form>
+<div class="surprise-list-heading"><h2>Surpresas guardadas</h2><span>Elas podem aparecer em qualquer dia.</span></div>
+<div class="surprise-list" id="surpriseList"></div>
+</section></main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./surpresa.js"></script></body></html>
