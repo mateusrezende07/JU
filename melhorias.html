@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffe8f0">
+<title>Nosso cantinho de melhorias | Júlia & Mateus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./melhorias.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body><div class="ambient-hearts" aria-hidden="true"></div>
+<header class="topbar page-topbar"><a class="back-home" href="./index.html">← Voltar ao nosso cantinho</a><div class="name name-right">JÚLIA <span>♥</span> MATEUS</div></header>
+<main class="subpage-main">
+<section class="subpage-hero"><span class="eyebrow">CUIDANDO DA NOSSA RELAÇÃO</span><h1>Nosso cantinho de <em>melhorias.</em></h1><p>Um espaço seguro para falar sobre o que incomodou, ouvir um ao outro e acompanhar o que conseguimos melhorar juntos. Sem acusações, sempre com carinho. ♥</p></section>
+<section class="auth-panel page-auth" id="improveAuth"><span class="eyebrow">NOSSO CANTINHO PRIVADO</span><h2>Entrem nas <em>nossas páginas.</em></h2><p>Use o mesmo e-mail e a mesma senha de vocês.</p>
+<form id="improveLoginForm"><label for="improveEmail">E-mail</label><input id="improveEmail" type="email" autocomplete="username" required placeholder="Seu e-mail"><label for="improvePassword">Senha</label><input id="improvePassword" type="password" autocomplete="current-password" required placeholder="Sua senha"><button class="submit-button" type="submit" id="improveLoginButton">Entrar ♥</button><p class="form-error" id="improveLoginError" role="alert"></p></form></section>
+<section class="subpage-content" id="improveContent" hidden>
+<div class="section-heading"><div><span class="eyebrow">CONVERSAS QUE FAZEM A GENTE CRESCER</span><h2>Vamos melhorar <em>juntos.</em></h2><p class="section-intro" id="improveSummary">Carregando...</p></div><button class="add-button logout-button" id="improveLogout" type="button">Sair</button></div>
+<div class="improve-note"><strong>Um combinado:</strong> registrem situações e sentimentos com respeito. A ideia não é procurar culpados, e sim entender um ao outro e encontrar soluções. ♥</div>
+<form class="improve-form" id="improveForm">
+<h2>Quero conversar sobre...</h2>
+<label>Quem está registrando?<select id="improvePerson" required><option value="Mateus">Mateus</option><option value="Júlia">Júlia</option></select></label>
+<label>O que aconteceu ou incomodou?<input id="improveTitle" maxlength="100" required placeholder="Ex.: Não gostei de como conversamos ontem"></label>
+<label>Conte um pouco mais <small>(opcional)</small><textarea id="improveDescription" rows="3" maxlength="800" placeholder="Como você se sentiu? O que gostaria que fosse diferente?"></textarea></label>
+<button class="submit-button" id="saveImprove" type="submit">Registrar para conversarmos ♥</button><p class="form-error improve-error" id="improveError" role="alert"></p>
+</form>
+<div class="improve-list-heading"><h2>Em aberto</h2><span>Assuntos que ainda merecem atenção</span></div><div class="improve-grid" id="openImproveList"></div>
+<div class="improve-list-heading resolved-heading"><h2>Resolvidos</h2><span>Coisas que conseguimos melhorar juntos ♥</span></div><div class="improve-grid" id="resolvedImproveList"></div>
+</section></main>
+<footer>feito com carinho para a Júlia <span>♥</span></footer>
+<script src="./melhorias.js"></script></body></html>
